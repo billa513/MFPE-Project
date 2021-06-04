@@ -30,6 +30,7 @@ public class EmployeeController {
 	@Autowired
 	private EmployeeRepository employeeRepository;
 	
+	@Autowired
 	private LoginRepository login;
 	
 	@GetMapping("/employees")
@@ -38,17 +39,23 @@ public class EmployeeController {
 		return employeeRepository.findAll();
 	}
 	
+	@GetMapping("/employess/doctor")
+	@CrossOrigin(origins="http://localhost:4200")
+	public List<Employee> getAllByRole(){
+		return employeeRepository.slectRecordByRole("Doctor");
+	}
+	
 	@PostMapping("/employees")
 	@CrossOrigin(origins="http://localhost:4200")
 	public Employee createEmployee(@Valid @RequestBody Employee employee) {
 		Employee emp=employeeRepository.save(employee);
-//		String id=emp.getId();
-//		String username=emp.getId();
-//		String password = String.valueOf(emp.getAadharNo());
-//		String role=emp.getRole();
-//		Login l=new Login(id,username,password,role);
-//		login.save(l);
-//		System.out.println(l);
+		String id=emp.getId();
+		String username=emp.getId();
+		String password = String.valueOf(emp.getAadharNo());
+		String role=emp.getRole();
+		Login l=new Login(id,role,username,password);
+		login.save(l);
+		System.out.println(l);
 		return  emp;
 	}
 	

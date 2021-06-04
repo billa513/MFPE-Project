@@ -1,8 +1,12 @@
 package com.example.newhospitalmanagement.model;
 
+import java.time.LocalDate;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
@@ -10,6 +14,10 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "patients")
@@ -27,8 +35,8 @@ public class Patient {
 	@NotBlank
 	private String gender;
 	
-	@NotBlank(message = "Date of Birth is mandatory")
-	private String dateOfBirth;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate dateOfBirth;
 	
 	@NotNull
 	private int age;
@@ -57,11 +65,25 @@ public class Patient {
 	private String state;
 	
 	@Column(unique=true)
-	@Size(min = 12, max = 12)
+	@Min(111111111111L) @Max(999999999999L) 
 	private long aadharNo;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate appointmentDate;
 	
 	private String bloodGroup;
+	@ManyToOne
+	@JoinColumn(name="doctor_id")
+	private Employee employe;
 	
+	@JsonBackReference
+	public Employee getEmploye() {
+		return employe;
+	}
+
+	public void setEmploye(Employee employe) {
+		this.employe = employe;
+	}
+
 	Patient() {
 		
 	}
@@ -100,11 +122,12 @@ public class Patient {
 		this.gender = gender;
 	}
 
-	public String getDateOfBirth() {
+	
+	public LocalDate getDateOfBirth() {
 		return dateOfBirth;
 	}
 
-	public void setDateOfBirth(String dateOfBirth) {
+	public void setDateOfBirth(LocalDate dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
 
@@ -187,16 +210,15 @@ public class Patient {
 	public void setBloodGroup(String bloodGroup) {
 		this.bloodGroup = bloodGroup;
 	}
+	
 
-	@Override
-	public String toString() {
-		return "Patient [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", gender=" + gender
-				+ ", dateOfBirth=" + dateOfBirth + ", age=" + age + ", problem=" + problem + ", phoneNumber="
-				+ phoneNumber + ", emailId=" + emailId + ", address=" + address + ", city=" + city + ", state=" + state
-				+ ", aadharNo=" + aadharNo + "]";
+	public LocalDate getAppointmentDate() {
+		return appointmentDate;
 	}
 
-	
-	
+	public void setAppointmentDate(LocalDate appointmentDate) {
+		this.appointmentDate = appointmentDate;
+	}
+
 	
 }

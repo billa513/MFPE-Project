@@ -1,8 +1,14 @@
 package com.example.newhospitalmanagement.model;
 
+import java.time.LocalDate;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
@@ -13,6 +19,9 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Range;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "employees")
@@ -33,7 +42,8 @@ public class Employee {
 	private String gender;
 	
 	@Column(name = "date_of_Birth")
-	private String dateOfBirth;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate dateOfBirth;
 	
 	@Column(name = "age")
 	@NotNull
@@ -74,9 +84,6 @@ public class Employee {
 	@NotBlank(message = "State is mandatory")
 	private String state;
 	
-
-	
-	
 	@Column(unique=true)
 	@Min(111111111111L) @Max(999999999999L) 
 	private long aadharNo;
@@ -84,6 +91,18 @@ public class Employee {
 	@Column(unique=true)
 	private String panCardNo;
 	
+	@OneToMany(cascade = CascadeType.ALL,mappedBy = "employe",fetch=FetchType.EAGER)
+	   private List<Patient> patients;
+	
+	@JsonManagedReference
+	public List<Patient> getPatients() {
+		return patients;
+	}
+
+	public void setPatients(List<Patient> patients) {
+		this.patients = patients;
+	}
+
 	public Employee() {
 		super();
 	}
@@ -120,11 +139,11 @@ public class Employee {
 		this.gender = gender;
 	}
 
-	public String getDateOfBirth() {
+	public LocalDate getDateOfBirth() {
 		return dateOfBirth;
 	}
 
-	public void setDateOfBirth(String dateOfBirth) {
+	public void setDateOfBirth(LocalDate dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
 
@@ -232,8 +251,10 @@ public class Employee {
 				+ ", dateOfBirth=" + dateOfBirth + ", age=" + age + ", phoneNumber=" + phoneNumber + ", emailid="
 				+ emailid + ", educationalQualification=" + educationalQualification + ", specialization="
 				+ specialization + ", Role=" + Role + ", address=" + address + ", pincode=" + pincode + ", city=" + city
-				+ ", state=" + state + ", aadharNo=" + aadharNo + ", panCardNo=" + panCardNo + "]";
+				+ ", state=" + state + ", aadharNo=" + aadharNo + ", panCardNo=" + panCardNo + ", patients=" + patients
+				+ "]";
 	}
+
 	
 	
 }
